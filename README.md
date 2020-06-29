@@ -1,0 +1,37 @@
+# NoteIt
+NoteIt is a simple note taking app showing how to implement the latest recommended DI library, Hilt.
+## Dependencies
+1. Add the ```hilt-android-gradle-plugin``` plugin to the project's root ```build.gradle``` file:
+```bash
+buildscript {
+    ...
+    dependencies {
+        ...
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.28-alpha'
+    }
+}
+```
+2. Apply the gradle plugin and add the dependencies below to the ```app/build.gradle``` file:
+```bash
+...
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+
+android {
+    ...
+}
+
+dependencies {
+    implementation "com.google.dagger:hilt-android:2.28-alpha"
+    kapt "com.google.dagger:hilt-android-compiler:2.28-alpha"
+}
+```
+3. Hilt requires Java 8 features:
+```android {
+  ...
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+}
+```
