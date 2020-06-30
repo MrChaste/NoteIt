@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.osecraft.android.noteit.db.Note
 import com.osecraft.android.noteit.repository.NoteRepository
 
+//Constructor injection for view-model in Hilt
 class NoteViewModel @ViewModelInject constructor(
     private val repository: NoteRepository
 ) : ViewModel() {

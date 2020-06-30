@@ -29,8 +29,10 @@ class AddEditNoteActivity : AppCompatActivity() {
         //Adds the close icon to the action_bar
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
 
+        //get data in intent sent from main activity
         val intent = intent
         if (intent.hasExtra(EXTRA_ID)) {
+            //if the intent has the id parameter, change title of appbar to Edit note
             title = "Edit note"
             binding.titleEdit.setText(intent.getStringExtra(EXTRA_TITLE))
             binding.desc.setText(intent.getStringExtra(EXTRA_DESC))

@@ -25,6 +25,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickedListener {
+
+    //Request code constant
     companion object {
         const val ADD_NOTE_REQUEST_CODE = 1
     }
@@ -33,7 +35,9 @@ class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickedListener {
     private val adapter = NoteAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //Enable a data-binding layout
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.addItemDecoration(
@@ -43,14 +47,14 @@ class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickedListener {
             )
         )
         binding.recyclerView.adapter = adapter
-        //Calls the addEditNoteActivity and expects a result
+        //Starts the addEditNoteActivity and expects a result
         binding.btnAddNote.setOnClickListener {
             val intent = Intent(this, AddEditNoteActivity::class.java)
             startActivityForResult(intent, ADD_NOTE_REQUEST_CODE)
         }
         viewModel.getAllNotes().observe(this, Observer {
             //Updates list in adapter with the observed list from view-model
-            adapter.setNotes(it)
+            adapter.submitList(it)
         })
 
         //Swipe left or right to delete functionality
@@ -74,15 +78,20 @@ class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickedListener {
         adapter.setOnItemClickListener(this)
     }
 
+    //Handle result gotten from addEditNoteActivity
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        //if response is successful and is for creating new note
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             val title = data?.getStringExtra(AddEditNoteActivity.EXTRA_TITLE)
             val desc = data?.getStringExtra(AddEditNoteActivity.EXTRA_DESC)
             val priority = data?.getIntExtra(AddEditNoteActivity.EXTRA_PRIORITY, 1)
+            //Create new note object and insert the values from addEditNoteActivity
             val note = Note(title!!, desc!!, priority!!)
+            //Insert into database
             viewModel.insert(note)
             Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show()
+            //if response is successful and is for updating  a note
         }  else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
             val id = data?.getIntExtra(AddEditNoteActivity.EXTRA_ID, -1)
             if (id == -1) {
@@ -93,6 +102,7 @@ class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickedListener {
             val desc = data?.getStringExtra(AddEditNoteActivity.EXTRA_DESC)
             val priority = data?.getIntExtra(AddEditNoteActivity.EXTRA_PRIORITY, 1)
             val note = Note(title!!, desc!!, priority!!)
+            //Pass the received Id, so that the database knows what id to update
             note.id = id!!
             viewModel.update(note)
             Toast.makeText(this, "Note updated", Toast.LENGTH_SHORT).show()
@@ -121,8 +131,10 @@ class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickedListener {
     }
 
     override fun onItemClicked(note: Note) {
+        //Call addEditNoteActivity to edit note on recyclerview row
         val intent = Intent(this, AddEditNoteActivity::class.java)
         intent.apply {
+            //Passes the data on the row to the addEditNoteActivity for editing
             putExtra(AddEditNoteActivity.EXTRA_ID, note.id)
             putExtra(AddEditNoteActivity.EXTRA_TITLE, note.title)
             putExtra(AddEditNoteActivity.EXTRA_DESC, note.description)

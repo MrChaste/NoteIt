@@ -6,6 +6,7 @@ import com.osecraft.android.noteit.db.NoteDao
 import com.osecraft.android.noteit.util.Coroutine
 import javax.inject.Inject
 
+//Constructor injection for Hilt
 class NoteRepository @Inject constructor(private val noteDao: NoteDao) {
 
    private val allAvailableNotes: LiveData<List<Note>> = noteDao.getAllAvailableNotes()
