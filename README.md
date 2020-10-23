@@ -22,8 +22,8 @@ android {
 }
 
 dependencies {
-    implementation "com.google.dagger:hilt-android:2.28-alpha"
-    kapt "com.google.dagger:hilt-android-compiler:2.28-alpha"
+    implementation "com.google.dagger:hilt-android:latest_version"
+    kapt "com.google.dagger:hilt-android-compiler:latest_version"
 }
 ```
 3. Hilt requires Java 8 features:
