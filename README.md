@@ -1,5 +1,5 @@
 # NoteIt
-NoteIt is a simple note taking app showing how to implement the latest recommended DI library, Hilt.
+NoteIt is a simple note taking app showing how to implement the latest Google recommended DI library, Hilt.
 ## Dependencies
 1. Add the ```hilt-android-gradle-plugin``` plugin to the project's root ```build.gradle``` file:
 ```bash
